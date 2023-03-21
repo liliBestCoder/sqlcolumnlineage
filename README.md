@@ -1,6 +1,6 @@
 + desc
 
-    The tool can help you parse select sql statement and extract column and table from origin sql.
+    The tool can help you parse sql select statement and extract column and table from the original sql.
 
 + use
     
