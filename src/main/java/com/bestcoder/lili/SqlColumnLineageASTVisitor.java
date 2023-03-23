@@ -72,7 +72,9 @@ public class SqlColumnLineageASTVisitor extends MySqlASTVisitorAdapter {
 
         for (Column column : top.getColumnList()) {
             String owner = column.getOwner();
-            if(StringUtils.isBlank(owner) || owner.equals(dataSetAlias)){
+            if(StringUtils.isBlank(owner)
+                    || owner.equals(dataSetAlias)
+                    || owner.equals(dataSetName)){
                 column.getSourceTable().add(dataSetName);
             }
         }
@@ -95,6 +97,12 @@ public class SqlColumnLineageASTVisitor extends MySqlASTVisitorAdapter {
         pushDataSetSource(sqlUnionQueryTableSource);
         return true;
     }
+
+    @Override
+    public void endVisit(SQLUnionQueryTableSource sqlUnionQueryTableSource) {
+        popDataSetSource(sqlUnionQueryTableSource);
+    }
+
 
     private void pushDataSetSource(SQLTableSource sqlTableSource) {
         DataSetSource dataSetSource = new DataSetSource(sqlTableSource.getAlias());
@@ -158,11 +166,6 @@ public class SqlColumnLineageASTVisitor extends MySqlASTVisitorAdapter {
                 }
             }
         }
-    }
-
-    @Override
-    public void endVisit(SQLUnionQueryTableSource sqlUnionQueryTableSource) {
-        popDataSetSource(sqlUnionQueryTableSource);
     }
 
     @Override
